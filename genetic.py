@@ -154,52 +154,53 @@ def sukcesja(populacja, rozmiar_chromosomu):
     return populacja + nowe_losowe
 
 
-def genetic(rozmiar_populacji,rozmiar_chromosomu,liczba_pokolen,prawdopodobienstwo_mutacji,ilosc_prob_fp,czas_stop):
-    # funkcja algorytmu genetycznego z zadanym rozmiarem populacji, rozmiarem chromosomu=4, liczba pokolen
-    # prawdopodobienstwem mutacji, iloscia prob przy obliczaniu funkcji decyzyjnej oraz gornym progiem
-    # czasu dzialania algorytmu
-    # komunikaty w konsoli systemowej, przebieg algorytmu zapisywany do pliku *.txt
-    # wyrysowany wykres krzywej uczacej
-
-    t = time.time()
-    plik_baza_danych = open("baza_danych.txt", "w")
-
-    populacja = inicjalizacja(rozmiar_populacji, rozmiar_chromosomu)
-    baza_danych = [[0] * rozmiar_populacji for i in range(liczba_pokolen)]
-
-    for i in range(0, liczba_pokolen):
-        for j in range(0, rozmiar_populacji):
-            wartosc_funkcji_przystosowania=0
-            for ilosc_prob in range(ilosc_prob_fp):
-                wartosc_fp, chromosom = run_game(populacja[j], i+1, j+1, ilosc_prob+1)
-                print("proba nr", ilosc_prob + 1, "lini", wartosc_fp)
-                wartosc_funkcji_przystosowania += wartosc_fp
-            wartosc_funkcji_przystosowania=wartosc_funkcji_przystosowania/ilosc_prob_fp
-
-            baza_danych[i][j] = [wartosc_funkcji_przystosowania, chromosom]
-            plik_baza_danych.write("Pokolenie " + repr(i + 1) + " osobnik " +
-                                   repr(j + 1) + " chromosom " + repr(chromosom) +
-                                    " lini " + repr(wartosc_funkcji_przystosowania) + "\n")
-            print("Pokolenie ",i+1, "osobnik", j+1, "chromosom ", chromosom, " lini ", wartosc_funkcji_przystosowania)
-        wyselekcjonowane, odrzucone = selekcja(baza_danych[i], rozmiar_populacji)
-        rodzice, dzieci = krzyzowanie(wyselekcjonowane)
-        populacja = [rodzice[0][1]] + [rodzice[1][1]] + dzieci
-        populacja = mutacja(populacja, prawdopodobienstwo_mutacji)
-        populacja = sukcesja(populacja, rozmiar_chromosomu)
-
-        if (time.time() - t) > czas_stop:
-            print("CZAS UPLYNAL")
-            break
-
-    plik_baza_danych.close()
-
-    maxx = [0] * (i + 1)
-    for k in range(0, i + 1):
-        maxx[k] = max([col[0] for col in baza_danych[k]])
-    plt.figure(1)
-    plt.plot(numpy.arange(1, k + 2), maxx, 'k-')
-    plt.xlabel('Pokolenie')
-    plt.ylabel('Przystosowanie najlepszego chromosomu')
-    plt.xlim(1, k + 1)
-    plt.ylim(0, max(maxx) * 1.1)
-    plt.show()
+# def genetic(rozmiar_populacji,rozmiar_chromosomu,liczba_pokolen,prawdopodobienstwo_mutacji,ilosc_prob_fp,czas_stop):
+#     # funkcja dostepna w pliku tetris.py
+#     # funkcja algorytmu genetycznego z zadanym rozmiarem populacji, rozmiarem chromosomu=4, liczba pokolen
+#     # prawdopodobienstwem mutacji, iloscia prob przy obliczaniu funkcji decyzyjnej oraz gornym progiem
+#     # czasu dzialania algorytmu
+#     # komunikaty w konsoli systemowej, przebieg algorytmu zapisywany do pliku *.txt
+#     # wyrysowany wykres krzywej uczacej
+#
+#     t = time.time()
+#     plik_baza_danych = open("baza_danych.txt", "w")
+#
+#     populacja = inicjalizacja(rozmiar_populacji, rozmiar_chromosomu)
+#     baza_danych = [[0] * rozmiar_populacji for i in range(liczba_pokolen)]
+#
+#     for i in range(0, liczba_pokolen):
+#         for j in range(0, rozmiar_populacji):
+#             wartosc_funkcji_przystosowania=0
+#             for ilosc_prob in range(ilosc_prob_fp):
+#                 wartosc_fp, chromosom = run_game(populacja[j], i+1, j+1, ilosc_prob+1)
+#                 print("proba nr", ilosc_prob + 1, "lini", wartosc_fp)
+#                 wartosc_funkcji_przystosowania += wartosc_fp
+#             wartosc_funkcji_przystosowania=wartosc_funkcji_przystosowania/ilosc_prob_fp
+#
+#             baza_danych[i][j] = [wartosc_funkcji_przystosowania, chromosom]
+#             plik_baza_danych.write("Pokolenie " + repr(i + 1) + " osobnik " +
+#                                    repr(j + 1) + " chromosom " + repr(chromosom) +
+#                                     " lini " + repr(wartosc_funkcji_przystosowania) + "\n")
+#             print("Pokolenie ",i+1, "osobnik", j+1, "chromosom ", chromosom, " lini ", wartosc_funkcji_przystosowania)
+#         wyselekcjonowane, odrzucone = selekcja(baza_danych[i], rozmiar_populacji)
+#         rodzice, dzieci = krzyzowanie(wyselekcjonowane)
+#         populacja = [rodzice[0][1]] + [rodzice[1][1]] + dzieci
+#         populacja = mutacja(populacja, prawdopodobienstwo_mutacji)
+#         populacja = sukcesja(populacja, rozmiar_chromosomu)
+#
+#         if (time.time() - t) > czas_stop:
+#             print("CZAS UPLYNAL")
+#             break
+#
+#     plik_baza_danych.close()
+#
+#     maxx = [0] * (i + 1)
+#     for k in range(0, i + 1):
+#         maxx[k] = max([col[0] for col in baza_danych[k]])
+#     plt.figure(1)
+#     plt.plot(numpy.arange(1, k + 2), maxx, 'k-')
+#     plt.xlabel('Pokolenie')
+#     plt.ylabel('Przystosowanie najlepszego chromosomu')
+#     plt.xlim(1, k + 1)
+#     plt.ylim(0, max(maxx) * 1.1)
+#     plt.show()
